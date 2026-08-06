@@ -10,8 +10,10 @@ import type { JsonSchema } from '../../src/domain/types.js';
 /**
  * Live contract verification (RFC-004 D6): read-only calls against a real
  * console, with every response validated against the vendor's own response
- * schema. Opt-in: `npm run test:contract` with UNIFI_CONSOLE_URL and
- * UNIFI_API_KEY set. No write operation is ever exercised here.
+ * schema. Opt-in: `npm run test:contract` with UNIFI_API_KEY set, plus either
+ * UNIFI_CONSOLE_URL (direct mode) or cloud mode with UNIFI_CONSOLE_ID naming
+ * the console to test (required only when several are visible, per ADR-002).
+ * No write operation is ever exercised here.
  */
 const enabled = process.env['UNIFI_CONTRACT'] === '1';
 
@@ -21,6 +23,38 @@ d('live contract (read-only)', () => {
   const { config } = loadConfig(process.env);
   const client = new UnifiClient(config);
   const map = loadOpMap();
+
+  let cloudConsoleId: string | undefined;
+  const consoleArgs = async (): Promise<{ consoleId?: string }> => {
+    if (config.mode !== 'cloud') return {};
+    if (!cloudConsoleId) {
+      const pinned = process.env['UNIFI_CONSOLE_ID'];
+      if (pinned) {
+        cloudConsoleId = pinned;
+      } else {
+        const consoles = await client.listConsoles();
+        if (consoles.length !== 1) {
+          throw new Error(
+            `Cloud mode: set UNIFI_CONSOLE_ID to one of: ${consoles
+              .map((c) => `${c.name}=${c.id}`)
+              .join(', ')}`,
+          );
+        }
+        cloudConsoleId = consoles[0]!.id;
+      }
+    }
+    return { consoleId: cloudConsoleId };
+  };
+
+  it('cloud mode: unifi_consoles lists at least one console', async () => {
+    if (config.mode !== 'cloud') return;
+    const consoles = await client.listConsoles();
+    expect(consoles.length).toBeGreaterThan(0);
+    for (const c of consoles) {
+      expect(typeof c.id).toBe('string');
+      expect(typeof c.name).toBe('string');
+    }
+  });
 
   const specDoc = JSON.parse(
     readFileSync(new URL('../../src/generated/spec-schemas.json', import.meta.url), 'utf8'),
@@ -58,6 +92,7 @@ d('live contract (read-only)', () => {
       pathTemplate: op.path,
       pathParams: {},
       queryParams: {},
+      ...(await consoleArgs()),
     });
     validateAgainst(op.responseSchema, result, op.opId);
   });
@@ -69,6 +104,7 @@ d('live contract (read-only)', () => {
       pathTemplate: op.path,
       pathParams: {},
       queryParams: { offset: 0, limit: 25 },
+      ...(await consoleArgs()),
     })) as { data: { id: string }[] };
     validateAgainst(op.responseSchema, result, op.opId);
     expect(result.data.length).toBeGreaterThan(0);
@@ -104,6 +140,7 @@ d('live contract (read-only)', () => {
       pathTemplate: op.path,
       pathParams: { siteId: siteId! },
       queryParams: op.queryParams.some((q) => q.name === 'offset') ? { offset: 0, limit: 25 } : {},
+      ...(await consoleArgs()),
     });
     validateAgainst(op.responseSchema, result, op.opId);
     if (toolName === 'unifi_devices') {
@@ -126,6 +163,7 @@ d('live contract (read-only)', () => {
       pathTemplate: op.path,
       pathParams: {},
       queryParams: op.queryParams.some((q) => q.name === 'offset') ? { offset: 0, limit: 25 } : {},
+      ...(await consoleArgs()),
     });
     validateAgainst(op.responseSchema, result, op.opId);
   });
@@ -138,6 +176,7 @@ d('live contract (read-only)', () => {
       pathTemplate: details.path,
       pathParams: { siteId, deviceId },
       queryParams: {},
+      ...(await consoleArgs()),
     });
     validateAgainst(details.responseSchema, detailsResult, details.opId);
     const stats = findOp('unifi_devices', 'get_statistics');
@@ -146,6 +185,7 @@ d('live contract (read-only)', () => {
       pathTemplate: stats.path,
       pathParams: { siteId, deviceId },
       queryParams: {},
+      ...(await consoleArgs()),
     });
     validateAgainst(stats.responseSchema, statsResult, stats.opId);
   });
@@ -158,6 +198,7 @@ d('live contract (read-only)', () => {
       pathTemplate: op.path,
       pathParams: { siteId: siteId! },
       queryParams: { offset: 0, limit: 5, filter: 'id.isNotNull()' },
+      ...(await consoleArgs()),
     })) as { data: unknown[] };
     validateAgainst(op.responseSchema, result, `${op.opId} (filtered)`);
   });
