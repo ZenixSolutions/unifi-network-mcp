@@ -17,6 +17,12 @@ import {
   SPEC_TOOL_NAME,
   describeOperation,
 } from './tools/spec.js';
+import {
+  CONSOLES_TOOL_DESCRIPTION,
+  CONSOLES_TOOL_INPUT_SCHEMA,
+  CONSOLES_TOOL_NAME,
+  parseConsolesInput,
+} from './tools/consoles.js';
 import { GATED_CLASSES, UnifiApiError, UnifiUsageError } from './domain/types.js';
 
 export const SERVER_NAME = 'unifi-network-mcp';
@@ -54,6 +60,12 @@ export function listTools(): ToolListing[] {
     description: SPEC_TOOL_DESCRIPTION,
     inputSchema: SPEC_TOOL_INPUT_SCHEMA as unknown as Record<string, unknown>,
     annotations: { title: 'Vendor API contract lookup', readOnlyHint: true },
+  });
+  tools.push({
+    name: CONSOLES_TOOL_NAME,
+    description: CONSOLES_TOOL_DESCRIPTION,
+    inputSchema: CONSOLES_TOOL_INPUT_SCHEMA as unknown as Record<string, unknown>,
+    annotations: { title: 'Console discovery (cloud mode)', readOnlyHint: true },
   });
   return tools;
 }
@@ -99,16 +111,39 @@ export function buildServer(options: BuildOptions = {}): BuiltServer {
       if (name === SPEC_TOOL_NAME) {
         return ok(formatResult(describeOperation(args), redact));
       }
-      if (!(name in map.tools)) throw new UnifiUsageError(`Unknown tool "${name}"`);
+      if (name !== CONSOLES_TOOL_NAME && !(name in map.tools)) {
+        throw new UnifiUsageError(`Unknown tool "${name}"`);
+      }
       if (!client) {
         throw (
           configError ??
-          new UnifiUsageError('Server is not configured; set UNIFI_CONSOLE_URL and UNIFI_API_KEY.')
+          new UnifiUsageError(
+            'Server is not configured; set UNIFI_API_KEY (and optionally UNIFI_CONSOLE_URL).',
+          )
         );
+      }
+      if (name === CONSOLES_TOOL_NAME) {
+        const { refresh } = parseConsolesInput(args);
+        return ok(formatResult(await client.listConsoles(refresh), redact));
       }
       const call = resolveCall(name, args);
       if (call.op.bodySchema !== null && call.body !== undefined) {
         getBodyValidator()(call.op.bodySchema, call.body);
+      }
+      let consoleId = call.consoleId;
+      if (client.mode === 'cloud' && consoleId === undefined) {
+        const consoles = await client.listConsoles();
+        const only = consoles.length === 1 ? consoles[0] : undefined;
+        if (only) {
+          consoleId = only.id;
+        } else {
+          const listing = consoles.map((c) => `- ${c.name} (consoleId: ${c.id})`).join('\n');
+          throw new UnifiUsageError(
+            consoles.length === 0
+              ? 'No consoles are visible to this API key (Site Manager /v1/hosts returned none).'
+              : `Multiple consoles are visible to this API key — retry with a consoleId:\n${listing}`,
+          );
+        }
       }
       const result = await client.request({
         method: call.op.method,
@@ -116,6 +151,7 @@ export function buildServer(options: BuildOptions = {}): BuiltServer {
         pathParams: call.pathParams,
         queryParams: call.queryParams,
         ...(call.body === undefined ? {} : { body: call.body }),
+        ...(consoleId === undefined ? {} : { consoleId }),
       });
       return ok(formatResult(result, redact));
     } catch (error) {

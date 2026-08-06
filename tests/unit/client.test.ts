@@ -151,3 +151,75 @@ describe('UnifiClient.request', () => {
     expect(result).toEqual({ ok: true });
   });
 });
+
+describe('cloud mode routing (ADR-002)', () => {
+  const cloud = loadConfig({ UNIFI_API_KEY: 'cloud-key' }).config;
+
+  it('routes calls through the api.ui.com connector proxy with an encoded consoleId', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(200, { ok: 1 }));
+    const client = new UnifiClient(cloud, fetchMock as unknown as FetchImpl);
+    await client.request({
+      method: 'GET',
+      pathTemplate: '/v1/sites',
+      pathParams: {},
+      queryParams: {},
+      consoleId: 'ABC:123/evil',
+    });
+    const [url] = fetchMock.mock.calls[0] as [URL];
+    expect(url.toString()).toBe(
+      'https://api.ui.com/v1/connector/consoles/ABC%3A123%2Fevil/proxy/network/integration/v1/sites',
+    );
+  });
+
+  it('refuses a cloud-mode call without a consoleId, pointing at unifi_consoles', async () => {
+    const fetchMock = vi.fn();
+    const client = new UnifiClient(cloud, fetchMock as unknown as FetchImpl);
+    await expect(
+      client.request({ method: 'GET', pathTemplate: '/v1/sites', pathParams: {}, queryParams: {} }),
+    ).rejects.toThrow(/unifi_consoles/);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('lists and maps consoles from Site Manager /v1/hosts, with caching', async () => {
+    const hosts = {
+      data: [
+        {
+          id: 'AAAA:1',
+          hardwareId: 'hw-1',
+          type: 'console',
+          ipAddress: '10.0.0.2',
+          reportedState: { name: 'Acme HQ' },
+        },
+        { id: 'BBBB:2', hardwareId: 'hw-2', reportedState: { hostname: 'beta-udm' } },
+        { notAnId: true },
+      ],
+    };
+    const fetchMock = vi.fn().mockImplementation(() => Promise.resolve(jsonResponse(200, hosts)));
+    const client = new UnifiClient(cloud, fetchMock as unknown as FetchImpl);
+    const consoles = await client.listConsoles();
+    expect(consoles).toEqual([
+      { id: 'AAAA:1', name: 'Acme HQ', type: 'console', ipAddress: '10.0.0.2' },
+      { id: 'BBBB:2', name: 'beta-udm' },
+    ]);
+    const [url] = fetchMock.mock.calls[0] as [URL];
+    expect(url.toString()).toBe('https://api.ui.com/v1/hosts');
+    await client.listConsoles();
+    expect(fetchMock).toHaveBeenCalledTimes(1); // cached
+    await client.listConsoles(true);
+    expect(fetchMock).toHaveBeenCalledTimes(2); // refresh bypasses cache
+  });
+
+  it('direct mode ignores consoleId and uses the configured console', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(200, { ok: 1 }));
+    const client = new UnifiClient(config, fetchMock as unknown as FetchImpl);
+    await client.request({
+      method: 'GET',
+      pathTemplate: '/v1/sites',
+      pathParams: {},
+      queryParams: {},
+      consoleId: 'ignored',
+    });
+    const [url] = fetchMock.mock.calls[0] as [URL];
+    expect(url.toString()).toBe('https://console.example/proxy/network/integration/v1/sites');
+  });
+});

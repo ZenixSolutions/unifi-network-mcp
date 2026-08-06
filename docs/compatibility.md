@@ -13,10 +13,11 @@
 
 ## Connectivity
 
-| Mode                   | `UNIFI_CONSOLE_URL`                                                              | Notes                                                                                              |
-| ---------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Local console          | `https://<console-ip>`                                                           | Self-signed TLS: either trust the console cert or set `UNIFI_INSECURE=1` (warned; see SECURITY.md) |
-| Site Manager Connector | `https://api.ui.com/v1/connector/consoles/<consoleId>/proxy/network/integration` | Cloud proxy, no VPN; same API key header                                                           |
+| Mode                           | `UNIFI_CONSOLE_URL`                                                              | Notes                                                                                                                                    |
+| ------------------------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Cloud multi-console (ADR-002)  | _unset_                                                                          | Consoles discovered via `unifi_consoles` (Site Manager `GET /v1/hosts`); per-call `consoleId` routes through the connector proxy; no VPN |
+| Local console (direct)         | `https://<console-ip>`                                                           | Self-signed TLS: either trust the console cert or set `UNIFI_INSECURE=1` (warned; see SECURITY.md)                                       |
+| Pinned connector base (direct) | `https://api.ui.com/v1/connector/consoles/<consoleId>/proxy/network/integration` | Cloud proxy bound to one console; no VPN; same API key header                                                                            |
 
 ## MCP clients and transports
 
@@ -37,4 +38,20 @@
   the vendor's written documentation (`X-API-KEY` header).
 - Vouchers `delete_by_filter` and other filter-based operations pass filter
   expressions through verbatim; the console is the authority on filterable
-  properties per endpoint (each endpoint's documentation lists them).
+  properties per endpoint (each endpoint's documentation lists them). Observed
+  live: `isNotNull` is rejected for `id` on the clients list — not every
+  function applies to every property.
+
+## Observed vendor spec deviations (live contract run, 2026-08-06)
+
+Validated against UniFi Network 10.4.x through the cloud connector. The
+response schemas in the vendor's published OpenAPI occasionally over-promise;
+the API is the authority. Recorded here and allowlisted in
+`tests/contract/live.test.ts` (`KNOWN_VENDOR_DEVIATIONS`):
+
+- `GET /v1/sites/{siteId}/device-tags` (`getDeviceTagPage`): items can lack
+  the schema-required `id`, and `deviceIds` can be empty despite `minItems: 1`.
+- Feature-gated endpoints (firewall policies/zones on consoles without
+  Zone-Based Firewall) answer `400` with the documented error shape
+  ("Zone Based Firewall is not configured") — correct behavior, treated as a
+  skip by the contract suite on consoles without the feature.

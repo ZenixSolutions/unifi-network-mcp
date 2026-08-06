@@ -82,6 +82,11 @@ export function buildToolInputSchema(tool: ToolDef): Record<string, unknown> {
       description: `${describeParam(name, sample)} Used by: ${inOps}.`,
     };
   }
+  properties['consoleId'] = {
+    type: 'string',
+    description:
+      'Cloud mode only: the console to target. Discover IDs with unifi_consoles. Ignored in direct (single-console) mode.',
+  };
   const gatedOps = usedBy((op) => GATED_CLASSES.includes(op.class));
   if (gatedOps.length > 0) {
     properties['confirm'] = {
@@ -132,6 +137,7 @@ export function buildEnvelopeSchema(opName: string, op: OperationDef): z.ZodType
     else s = z.string();
     shape[q.name] = q.required ? s : s.optional();
   }
+  shape['consoleId'] = z.string().min(1).optional();
   const gated = GATED_CLASSES.includes(op.class);
   if (gated) {
     shape['confirm'] = z.literal(true, {
@@ -154,6 +160,7 @@ export interface ResolvedCall {
   readonly pathParams: Record<string, string | number>;
   readonly queryParams: Record<string, string | number | undefined>;
   readonly body: unknown;
+  readonly consoleId?: string;
 }
 
 /** Validates a raw tool call against the op map; throws UnifiUsageError on any mismatch. */
@@ -187,5 +194,12 @@ export function resolveCall(toolName: string, args: unknown): ResolvedCall {
   for (const q of op.queryParams) {
     queryParams[q.name] = data[q.name] as string | number | undefined;
   }
-  return { op, pathParams, queryParams, body: data['body'] };
+  const consoleId = data['consoleId'];
+  return {
+    op,
+    pathParams,
+    queryParams,
+    body: data['body'],
+    ...(typeof consoleId === 'string' ? { consoleId } : {}),
+  };
 }
