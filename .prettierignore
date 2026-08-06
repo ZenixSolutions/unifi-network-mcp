@@ -1,0 +1,7 @@
+dist/
+coverage/
+node_modules/
+docs/reference/openapi.json
+docs/tools.md
+src/generated/
+package-lock.json

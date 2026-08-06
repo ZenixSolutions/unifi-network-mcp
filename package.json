@@ -1,0 +1,68 @@
+{
+  "name": "@zenixsolutions/unifi-network-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for the official UniFi Network Integration API. Community project, not affiliated with or endorsed by Ubiquiti Inc.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Zenix Solutions",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZenixSolutions/unifi-network-mcp.git"
+  },
+  "homepage": "https://github.com/ZenixSolutions/unifi-network-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/ZenixSolutions/unifi-network-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "unifi",
+    "unifi-network",
+    "ubiquiti",
+    "network-automation"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
+  "bin": {
+    "unifi-network-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "docs/reference/openapi.json",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "generate": "node scripts/generate-op-map.mjs && node scripts/generate-tool-docs.mjs",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-generated.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:contract": "UNIFI_CONTRACT=1 vitest run tests/contract",
+    "check:budget": "node scripts/check-tools-budget.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.12.1",
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
+    "undici": "7.10.0",
+    "zod": "3.25.42"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.29",
+    "@vitest/coverage-v8": "3.2.4",
+    "eslint": "9.28.0",
+    "prettier": "3.5.3",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.33.1",
+    "vitest": "3.2.4"
+  }
+}
