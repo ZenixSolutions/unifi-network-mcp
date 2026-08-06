@@ -1,0 +1,36 @@
+name: Bug report
+description: Something behaves differently from the documentation
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Server version
+      description: Output of `npx -y @zenixsolutions/unifi-network-mcp --version`
+    validations:
+      required: true
+  - type: input
+    id: controller
+    attributes:
+      label: UniFi Network Application version and console model
+      placeholder: e.g. 10.4.57 on a UDM Pro
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: MCP client
+      placeholder: e.g. Claude Desktop 1.x
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: The tool call (name + arguments) and what happened. REDACT your API key and any private topology you don't want public.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true

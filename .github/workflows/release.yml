@@ -1,0 +1,60 @@
+# Release workflow — encodes the lessons in the hudu-mcp release playbook:
+# pinned npm major, dry-run gate before every publish, token path for the
+# first publish (trusted publishing cannot be configured for a package that
+# has never been published), OIDC trusted-publishing path afterwards with the
+# setup-node _authToken line stripped (actions/setup-node#1551).
+name: release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      HAS_NPM_TOKEN: ${{ secrets.NPM_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - name: Pin npm major (never let a release job meet a new npm first)
+        run: npm install -g npm@11
+      - run: npm ci
+      - name: Full validation
+        run: |
+          npm run generate
+          git diff --exit-code src/generated docs/tools.md
+          npm run typecheck
+          npm run lint
+          npm run format:check
+          npm run test:coverage
+          npm run build
+          npm run check:budget
+      - name: Tag matches package version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG=$(node -p "require('./package.json').version")
+          if [ "$TAG" != "$PKG" ]; then echo "tag v$TAG != package $PKG"; exit 1; fi
+      - name: Dry run (the only cheap place to catch a bad tarball)
+        run: npm publish --dry-run --access public
+      - name: Publish with token (first publish / fallback)
+        if: env.HAS_NPM_TOKEN == 'true'
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish via trusted publishing (OIDC)
+        if: env.HAS_NPM_TOKEN != 'true'
+        run: |
+          # setup-node writes an _authToken line that silently disables the
+          # OIDC exchange when NODE_AUTH_TOKEN is unset — strip it.
+          npmrc="${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
+          sed -i '/_authToken/d' "$npmrc"
+          npm publish --access public
