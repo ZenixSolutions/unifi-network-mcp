@@ -6,6 +6,7 @@ import { loadConfig } from '../../src/api/config.js';
 import { UnifiClient } from '../../src/api/client.js';
 import { loadOpMap } from '../../src/tools/registry.js';
 import type { JsonSchema } from '../../src/domain/types.js';
+import { UnifiApiError } from '../../src/domain/types.js';
 
 /**
  * Live contract verification (RFC-004 D6): read-only calls against a real
@@ -76,6 +77,46 @@ d('live contract (read-only)', () => {
     }
   };
 
+  /**
+   * Feature-gated endpoints answer 400 with the documented error shape when
+   * the feature is not configured on the target console (observed live:
+   * "Zone Based Firewall is not configured"). That is correct API behavior,
+   * not a contract violation — treat as a skip for this console.
+   */
+  const isFeatureGated400 = (error: unknown): boolean =>
+    error instanceof UnifiApiError &&
+    error.statusCode === 400 &&
+    /not configured/i.test(error.message);
+
+  /**
+   * Known vendor spec deviations, observed live and recorded in
+   * docs/compatibility.md. The response schema over-promises; the API is the
+   * authority. Key: opId → substrings the mismatch must contain.
+   */
+  const KNOWN_VENDOR_DEVIATIONS: Record<string, string[]> = {
+    // Observed 2026-08-06 against Network 10.4.x via the cloud connector:
+    // device-tag items can lack the required "id" and have empty deviceIds.
+    getDeviceTagPage: ["must have required property 'id'"],
+  };
+
+  const validateOrRecordDeviation = (
+    schema: JsonSchema | null,
+    value: unknown,
+    opId: string,
+  ): void => {
+    try {
+      validateAgainst(schema, value, opId);
+    } catch (error) {
+      const known = KNOWN_VENDOR_DEVIATIONS[opId];
+      const message = error instanceof Error ? error.message : String(error);
+      if (known && known.some((needle) => message.includes(needle))) {
+        console.warn(`[known vendor spec deviation] ${opId}: ${message}`);
+        return;
+      }
+      throw error;
+    }
+  };
+
   const findOp = (toolName: string, opName: string) => {
     const op = map.tools[toolName]?.ops[opName];
     if (!op) throw new Error(`missing ${toolName}.${opName}`);
@@ -84,6 +125,7 @@ d('live contract (read-only)', () => {
 
   let siteId: string | undefined;
   let deviceId: string | undefined;
+  let clientId: string | undefined;
 
   it('GET /v1/info matches the vendor schema', async () => {
     const op = findOp('unifi_info', 'get');
@@ -135,17 +177,32 @@ d('live contract (read-only)', () => {
   it.each(siteScopedLists)('%s.%s matches the vendor schema', async (toolName, opName) => {
     expect(siteId, 'sites list must run first').toBeDefined();
     const op = findOp(toolName, opName);
-    const result = await client.request({
-      method: 'GET',
-      pathTemplate: op.path,
-      pathParams: { siteId: siteId! },
-      queryParams: op.queryParams.some((q) => q.name === 'offset') ? { offset: 0, limit: 25 } : {},
-      ...(await consoleArgs()),
-    });
-    validateAgainst(op.responseSchema, result, op.opId);
+    let result: unknown;
+    try {
+      result = await client.request({
+        method: 'GET',
+        pathTemplate: op.path,
+        pathParams: { siteId: siteId! },
+        queryParams: op.queryParams.some((q) => q.name === 'offset')
+          ? { offset: 0, limit: 25 }
+          : {},
+        ...(await consoleArgs()),
+      });
+    } catch (error) {
+      if (isFeatureGated400(error)) {
+        console.warn(`[feature not configured on this console] ${op.opId}`);
+        return;
+      }
+      throw error;
+    }
+    validateOrRecordDeviation(op.responseSchema, result, op.opId);
     if (toolName === 'unifi_devices') {
       const page = result as { data: { id: string }[] };
       deviceId = page.data[0]?.id;
+    }
+    if (toolName === 'unifi_clients') {
+      const page = result as { data: { id: string }[] };
+      clientId = page.data[0]?.id;
     }
   });
 
@@ -192,14 +249,22 @@ d('live contract (read-only)', () => {
 
   it('filtering works against a live list endpoint', async () => {
     expect(siteId).toBeDefined();
+    if (!clientId) {
+      console.warn('[skip] no connected client on this console to filter for');
+      return;
+    }
+    // Each endpoint documents which properties/functions are filterable;
+    // id.eq(...) on the clients list is documented-safe (observed live:
+    // isNotNull is NOT allowed for id — the 400 is correct API behavior).
     const op = findOp('unifi_clients', 'list');
     const result = (await client.request({
       method: 'GET',
       pathTemplate: op.path,
       pathParams: { siteId: siteId! },
-      queryParams: { offset: 0, limit: 5, filter: 'id.isNotNull()' },
+      queryParams: { offset: 0, limit: 5, filter: `id.eq(${clientId})` },
       ...(await consoleArgs()),
-    })) as { data: unknown[] };
+    })) as { data: { id: string }[] };
     validateAgainst(op.responseSchema, result, `${op.opId} (filtered)`);
+    expect(result.data.some((c) => c.id === clientId)).toBe(true);
   });
 });

@@ -38,4 +38,20 @@
   the vendor's written documentation (`X-API-KEY` header).
 - Vouchers `delete_by_filter` and other filter-based operations pass filter
   expressions through verbatim; the console is the authority on filterable
-  properties per endpoint (each endpoint's documentation lists them).
+  properties per endpoint (each endpoint's documentation lists them). Observed
+  live: `isNotNull` is rejected for `id` on the clients list — not every
+  function applies to every property.
+
+## Observed vendor spec deviations (live contract run, 2026-08-06)
+
+Validated against UniFi Network 10.4.x through the cloud connector. The
+response schemas in the vendor's published OpenAPI occasionally over-promise;
+the API is the authority. Recorded here and allowlisted in
+`tests/contract/live.test.ts` (`KNOWN_VENDOR_DEVIATIONS`):
+
+- `GET /v1/sites/{siteId}/device-tags` (`getDeviceTagPage`): items can lack
+  the schema-required `id`, and `deviceIds` can be empty despite `minItems: 1`.
+- Feature-gated endpoints (firewall policies/zones on consoles without
+  Zone-Based Firewall) answer `400` with the documented error shape
+  ("Zone Based Firewall is not configured") — correct behavior, treated as a
+  skip by the contract suite on consoles without the feature.
