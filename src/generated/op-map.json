@@ -1,0 +1,3325 @@
+{
+ "apiVersion": "10.4.57",
+ "generatedFrom": "docs/reference/openapi.json",
+ "operationCount": 73,
+ "tools": {
+  "unifi_supporting": {
+   "title": "Supporting resources (countries, DPI, device tags, RADIUS, VPN, WANs)",
+   "ops": {
+    "list_countries": {
+     "opId": "getCountries",
+     "method": "GET",
+     "path": "/v1/countries",
+     "class": "read",
+     "summary": "List Countries",
+     "pathParams": [],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Country definition page"
+     }
+    },
+    "list_dpi_applications": {
+     "opId": "getDpiApplications",
+     "method": "GET",
+     "path": "/v1/dpi/applications",
+     "class": "read",
+     "summary": "List DPI Applications",
+     "pathParams": [],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/DPI application page"
+     }
+    },
+    "list_dpi_categories": {
+     "opId": "getDpiApplicationCategories",
+     "method": "GET",
+     "path": "/v1/dpi/categories",
+     "class": "read",
+     "summary": "List DPI Application Categories",
+     "pathParams": [],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/DPI category page"
+     }
+    },
+    "list_device_tags": {
+     "opId": "getDeviceTagPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/device-tags",
+     "class": "read",
+     "summary": "List Device Tags",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "$ref": "unifi-spec#/components/schemas/FilterExpression"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationDeviceTagPageDto"
+     }
+    },
+    "list_radius_profiles": {
+     "opId": "getRadiusProfileOverviewPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/radius/profiles",
+     "class": "read",
+     "summary": "List Radius Profiles",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Radius Profile Overview Page"
+     }
+    },
+    "list_vpn_servers": {
+     "opId": "getVpnServerPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/vpn/servers",
+     "class": "read",
+     "summary": "List VPN Servers",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationVpnServerOverviewPageDto"
+     }
+    },
+    "list_site_to_site_vpn_tunnels": {
+     "opId": "getSiteToSiteVpnTunnelPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/vpn/site-to-site-tunnels",
+     "class": "read",
+     "summary": "List Site-To-Site VPN Tunnels",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationSiteToSiteVpnTunnelOverviewPageDto"
+     }
+    },
+    "list_wans": {
+     "opId": "getWansOverviewPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/wans",
+     "class": "read",
+     "summary": "List WAN Interfaces",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/WAN overview page"
+     }
+    }
+   }
+  },
+  "unifi_info": {
+   "title": "UniFi Network application info",
+   "ops": {
+    "get": {
+     "opId": "getInfo",
+     "method": "GET",
+     "path": "/v1/info",
+     "class": "read",
+     "summary": "Get Application Info",
+     "pathParams": [],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Application info"
+     }
+    }
+   }
+  },
+  "unifi_devices": {
+   "title": "UniFi devices (adoption, details, statistics, restart, PoE port power-cycle)",
+   "ops": {
+    "list_pending": {
+     "opId": "getPendingDevicePage",
+     "method": "GET",
+     "path": "/v1/pending-devices",
+     "class": "read",
+     "summary": "List Devices Pending Adoption",
+     "pathParams": [],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Device pending adoption page"
+     }
+    },
+    "list": {
+     "opId": "getAdoptedDeviceOverviewPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/devices",
+     "class": "read",
+     "summary": "List Adopted Devices",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Adopted device overview page"
+     }
+    },
+    "adopt": {
+     "opId": "adoptDevice",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/devices",
+     "class": "create",
+     "summary": "Adopt Devices",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationDeviceAdoptionRequestDto"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Adopted device details"
+     }
+    },
+    "remove": {
+     "opId": "removeDevice",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/devices/{deviceId}",
+     "class": "destructive",
+     "summary": "Remove (Unadopt) Device",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "deviceId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": null
+    },
+    "get": {
+     "opId": "getAdoptedDeviceDetails",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/devices/{deviceId}",
+     "class": "read",
+     "summary": "Get Adopted Device Details",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "deviceId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Adopted device details"
+     }
+    },
+    "execute_action": {
+     "opId": "executeAdoptedDeviceAction",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/devices/{deviceId}/actions",
+     "class": "admin",
+     "summary": "Execute Adopted Device Action",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "deviceId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/Device restart request"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "action": {
+            "const": "RESTART"
+           }
+          },
+          "required": [
+           "action"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "action"
+     },
+     "responseSchema": null
+    },
+    "execute_port_action": {
+     "opId": "executePortAction",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/devices/{deviceId}/interfaces/ports/{portIdx}/actions",
+     "class": "admin",
+     "summary": "Execute Port Action",
+     "pathParams": [
+      {
+       "name": "portIdx",
+       "schema": {
+        "format": "int32",
+        "type": "integer"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "deviceId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/Port PoE power-cycle request"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "action": {
+            "const": "POWER_CYCLE"
+           }
+          },
+          "required": [
+           "action"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "action"
+     },
+     "responseSchema": null
+    },
+    "get_statistics": {
+     "opId": "getAdoptedDeviceLatestStatistics",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/devices/{deviceId}/statistics/latest",
+     "class": "read",
+     "summary": "Get Latest Adopted Device Statistics",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "deviceId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Latest statistics for a device"
+     }
+    }
+   }
+  },
+  "unifi_sites": {
+   "title": "Sites on this UniFi Network console",
+   "ops": {
+    "list": {
+     "opId": "getSiteOverviewPage",
+     "method": "GET",
+     "path": "/v1/sites",
+     "class": "read",
+     "summary": "List Local Sites",
+     "pathParams": [],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Site overview page"
+     }
+    }
+   }
+  },
+  "unifi_acl_rules": {
+   "title": "ACL rules and their ordering",
+   "ops": {
+    "list": {
+     "opId": "getAclRulePage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/acl-rules",
+     "class": "read",
+     "summary": "List ACL Rules",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationAclRulePageDto"
+     }
+    },
+    "create": {
+     "opId": "createAclRule",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/acl-rules",
+     "class": "create",
+     "summary": "Create ACL Rule",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationIpAclRuleCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "IPV4"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationMacAclRuleCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "MAC"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "type"
+     },
+     "responseSchema": null
+    },
+    "get_ordering": {
+     "opId": "getAclRuleOrdering",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/acl-rules/ordering",
+     "class": "read",
+     "summary": "Get User-Defined ACL Rule Ordering",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/ACL rule ordering"
+     }
+    },
+    "update_ordering": {
+     "opId": "updateAclRuleOrdering",
+     "method": "PUT",
+     "path": "/v1/sites/{siteId}/acl-rules/ordering",
+     "class": "update",
+     "summary": "Reorder User-Defined ACL Rules",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "$ref": "unifi-spec#/components/schemas/ACL rule ordering"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/ACL rule ordering"
+     }
+    },
+    "delete": {
+     "opId": "deleteAclRule",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/acl-rules/{aclRuleId}",
+     "class": "destructive",
+     "summary": "Delete ACL Rule",
+     "pathParams": [
+      {
+       "name": "aclRuleId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": null
+    },
+    "get": {
+     "opId": "getAclRule",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/acl-rules/{aclRuleId}",
+     "class": "read",
+     "summary": "Get ACL Rule",
+     "pathParams": [
+      {
+       "name": "aclRuleId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/ACL rule"
+     }
+    },
+    "update": {
+     "opId": "updateAclRule",
+     "method": "PUT",
+     "path": "/v1/sites/{siteId}/acl-rules/{aclRuleId}",
+     "class": "update",
+     "summary": "Update ACL Rule",
+     "pathParams": [
+      {
+       "name": "aclRuleId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationIpAclRuleCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "IPV4"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationMacAclRuleCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "MAC"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "type"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/ACL rule"
+     }
+    }
+   }
+  },
+  "unifi_clients": {
+   "title": "Connected clients (list, details, guest authorization)",
+   "ops": {
+    "list": {
+     "opId": "getConnectedClientOverviewPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/clients",
+     "class": "read",
+     "summary": "List Connected Clients",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Client overview page"
+     }
+    },
+    "get": {
+     "opId": "getConnectedClientDetails",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/clients/{clientId}",
+     "class": "read",
+     "summary": "Get Connected Client Details",
+     "pathParams": [
+      {
+       "name": "clientId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Client details"
+     }
+    },
+    "execute_action": {
+     "opId": "executeConnectedClientAction",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/clients/{clientId}/actions",
+     "class": "admin",
+     "summary": "Execute Client Action",
+     "pathParams": [
+      {
+       "name": "clientId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/Guest access authorization request"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "action": {
+            "const": "AUTHORIZE_GUEST_ACCESS"
+           }
+          },
+          "required": [
+           "action"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/Guest access unauthorization request"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "action": {
+            "const": "UNAUTHORIZE_GUEST_ACCESS"
+           }
+          },
+          "required": [
+           "action"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "action"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Client action response"
+     }
+    }
+   }
+  },
+  "unifi_dns_policies": {
+   "title": "DNS policies",
+   "ops": {
+    "list": {
+     "opId": "getDnsPolicyPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/dns/policies",
+     "class": "read",
+     "summary": "List DNS Policies",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationDnsPolicyPageDto"
+     }
+    },
+    "create": {
+     "opId": "createDnsPolicy",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/dns/policies",
+     "class": "create",
+     "summary": "Create DNS Policy",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsAaaaRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "AAAA_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsARecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "A_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsCnameRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "CNAME_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsForwardDomainPolicyCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "FORWARD_DOMAIN"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsMxRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "MX_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsSrvRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "SRV_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsTxtRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "TXT_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "type"
+     },
+     "responseSchema": null
+    },
+    "delete": {
+     "opId": "deleteDnsPolicy",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/dns/policies/{dnsPolicyId}",
+     "class": "destructive",
+     "summary": "Delete DNS Policy",
+     "pathParams": [
+      {
+       "name": "dnsPolicyId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": null
+    },
+    "get": {
+     "opId": "getDnsPolicy",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/dns/policies/{dnsPolicyId}",
+     "class": "read",
+     "summary": "Get DNS Policy",
+     "pathParams": [
+      {
+       "name": "dnsPolicyId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/DNS policy"
+     }
+    },
+    "update": {
+     "opId": "updateDnsPolicy",
+     "method": "PUT",
+     "path": "/v1/sites/{siteId}/dns/policies/{dnsPolicyId}",
+     "class": "update",
+     "summary": "Update DNS Policy",
+     "pathParams": [
+      {
+       "name": "dnsPolicyId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsAaaaRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "AAAA_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsARecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "A_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsCnameRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "CNAME_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsForwardDomainPolicyCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "FORWARD_DOMAIN"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsMxRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "MX_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsSrvRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "SRV_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationDnsTxtRecordCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "TXT_RECORD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "type"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/DNS policy"
+     }
+    }
+   }
+  },
+  "unifi_firewall_policies": {
+   "title": "Firewall policies and their ordering",
+   "ops": {
+    "list": {
+     "opId": "getFirewallPolicies",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/firewall/policies",
+     "class": "read",
+     "summary": "List Firewall Policies",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Firewall policy page"
+     }
+    },
+    "create": {
+     "opId": "createFirewallPolicy",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/firewall/policies",
+     "class": "create",
+     "summary": "Create Firewall Policy",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "$ref": "unifi-spec#/components/schemas/Create or update firewall policy"
+     },
+     "responseSchema": null
+    },
+    "get_ordering": {
+     "opId": "getFirewallPolicyOrdering",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/firewall/policies/ordering",
+     "class": "read",
+     "summary": "Get User-Defined Firewall Policy Ordering",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "sourceFirewallZoneId",
+       "required": true,
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "destinationFirewallZoneId",
+       "required": true,
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationFirewallPolicyOrderingDto"
+     }
+    },
+    "update_ordering": {
+     "opId": "updateFirewallPolicyOrdering",
+     "method": "PUT",
+     "path": "/v1/sites/{siteId}/firewall/policies/ordering",
+     "class": "update",
+     "summary": "Reorder User-Defined Firewall Policies",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "sourceFirewallZoneId",
+       "required": true,
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "destinationFirewallZoneId",
+       "required": true,
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": true,
+     "bodySchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationFirewallPolicyOrderingDto"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationFirewallPolicyOrderingDto"
+     }
+    },
+    "delete": {
+     "opId": "deleteFirewallPolicy",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/firewall/policies/{firewallPolicyId}",
+     "class": "destructive",
+     "summary": "Delete Firewall Policy",
+     "pathParams": [
+      {
+       "name": "firewallPolicyId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": null
+    },
+    "get": {
+     "opId": "getFirewallPolicy",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/firewall/policies/{firewallPolicyId}",
+     "class": "read",
+     "summary": "Get Firewall Policy",
+     "pathParams": [
+      {
+       "name": "firewallPolicyId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Firewall policy"
+     }
+    },
+    "patch": {
+     "opId": "patchFirewallPolicy",
+     "method": "PATCH",
+     "path": "/v1/sites/{siteId}/firewall/policies/{firewallPolicyId}",
+     "class": "update",
+     "summary": "Patch Firewall Policy",
+     "pathParams": [
+      {
+       "name": "firewallPolicyId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "$ref": "unifi-spec#/components/schemas/Patch firewall policy"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Firewall policy"
+     }
+    },
+    "update": {
+     "opId": "updateFirewallPolicy",
+     "method": "PUT",
+     "path": "/v1/sites/{siteId}/firewall/policies/{firewallPolicyId}",
+     "class": "update",
+     "summary": "Update Firewall Policy",
+     "pathParams": [
+      {
+       "name": "firewallPolicyId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "$ref": "unifi-spec#/components/schemas/Create or update firewall policy"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Firewall policy"
+     }
+    }
+   }
+  },
+  "unifi_firewall_zones": {
+   "title": "Firewall zones",
+   "ops": {
+    "list": {
+     "opId": "getFirewallZones",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/firewall/zones",
+     "class": "read",
+     "summary": "List Firewall Zones",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Firewall zones page"
+     }
+    },
+    "create": {
+     "opId": "createFirewallZone",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/firewall/zones",
+     "class": "create",
+     "summary": "Create Custom Firewall Zone",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "$ref": "unifi-spec#/components/schemas/Create or update firewall zone"
+     },
+     "responseSchema": null
+    },
+    "delete": {
+     "opId": "deleteFirewallZone",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/firewall/zones/{firewallZoneId}",
+     "class": "destructive",
+     "summary": "Delete Custom Firewall Zone",
+     "pathParams": [
+      {
+       "name": "firewallZoneId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": null
+    },
+    "get": {
+     "opId": "getFirewallZone",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/firewall/zones/{firewallZoneId}",
+     "class": "read",
+     "summary": "Get Firewall Zone",
+     "pathParams": [
+      {
+       "name": "firewallZoneId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Firewall zone"
+     }
+    },
+    "update": {
+     "opId": "updateFirewallZone",
+     "method": "PUT",
+     "path": "/v1/sites/{siteId}/firewall/zones/{firewallZoneId}",
+     "class": "update",
+     "summary": "Update Firewall Zone",
+     "pathParams": [
+      {
+       "name": "firewallZoneId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "$ref": "unifi-spec#/components/schemas/Create or update firewall zone"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Firewall zone"
+     }
+    }
+   }
+  },
+  "unifi_vouchers": {
+   "title": "Hotspot vouchers",
+   "ops": {
+    "delete_by_filter": {
+     "opId": "deleteVouchers",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/hotspot/vouchers",
+     "class": "destructive",
+     "summary": "Delete Vouchers",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "filter",
+       "required": true,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Voucher deletion results"
+     }
+    },
+    "list": {
+     "opId": "getVouchers",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/hotspot/vouchers",
+     "class": "read",
+     "summary": "List Vouchers",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 100,
+        "format": "int32",
+        "maximum": 1000,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Hotspot voucher detail page"
+     }
+    },
+    "generate": {
+     "opId": "createVouchers",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/hotspot/vouchers",
+     "class": "create",
+     "summary": "Generate Vouchers",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "$ref": "unifi-spec#/components/schemas/Hotspot voucher creation request"
+     },
+     "responseSchema": null
+    },
+    "delete": {
+     "opId": "deleteVoucher",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/hotspot/vouchers/{voucherId}",
+     "class": "destructive",
+     "summary": "Delete Voucher",
+     "pathParams": [
+      {
+       "name": "voucherId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Voucher deletion results"
+     }
+    },
+    "get": {
+     "opId": "getVoucher",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/hotspot/vouchers/{voucherId}",
+     "class": "read",
+     "summary": "Get Voucher Details",
+     "pathParams": [
+      {
+       "name": "voucherId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Hotspot voucher details"
+     }
+    }
+   }
+  },
+  "unifi_networks": {
+   "title": "Networks (VLANs/subnets) configuration",
+   "ops": {
+    "list": {
+     "opId": "getNetworksOverviewPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/networks",
+     "class": "read",
+     "summary": "List Networks",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Network overview page"
+     }
+    },
+    "create": {
+     "opId": "createNetwork",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/networks",
+     "class": "create",
+     "summary": "Create Network",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationGatewayManagedNetworkCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "management": {
+            "const": "GATEWAY"
+           }
+          },
+          "required": [
+           "management"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationSwitchManagedNetworkCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "management": {
+            "const": "SWITCH"
+           }
+          },
+          "required": [
+           "management"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationUnmanagedNetworkCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "management": {
+            "const": "UNMANAGED"
+           }
+          },
+          "required": [
+           "management"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "management"
+     },
+     "responseSchema": null
+    },
+    "delete": {
+     "opId": "deleteNetwork",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/networks/{networkId}",
+     "class": "destructive",
+     "summary": "Delete Network",
+     "pathParams": [
+      {
+       "name": "networkId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "force",
+       "required": false,
+       "schema": {
+        "default": false,
+        "type": "boolean"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": null
+    },
+    "get": {
+     "opId": "getNetworkDetails",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/networks/{networkId}",
+     "class": "read",
+     "summary": "Get Network Details",
+     "pathParams": [
+      {
+       "name": "networkId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Network details"
+     }
+    },
+    "update": {
+     "opId": "updateNetwork",
+     "method": "PUT",
+     "path": "/v1/sites/{siteId}/networks/{networkId}",
+     "class": "update",
+     "summary": "Update Network",
+     "pathParams": [
+      {
+       "name": "networkId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationGatewayManagedNetworkCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "management": {
+            "const": "GATEWAY"
+           }
+          },
+          "required": [
+           "management"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationSwitchManagedNetworkCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "management": {
+            "const": "SWITCH"
+           }
+          },
+          "required": [
+           "management"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationUnmanagedNetworkCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "management": {
+            "const": "UNMANAGED"
+           }
+          },
+          "required": [
+           "management"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "management"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Network details"
+     }
+    },
+    "get_references": {
+     "opId": "getNetworkReferences",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/networks/{networkId}/references",
+     "class": "read",
+     "summary": "Get Network References",
+     "pathParams": [
+      {
+       "name": "networkId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Network references"
+     }
+    }
+   }
+  },
+  "unifi_switching": {
+   "title": "Switching read-only views (LAGs, MC-LAG domains, switch stacks)",
+   "ops": {
+    "list_lags": {
+     "opId": "getLagPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/switching/lags",
+     "class": "read",
+     "summary": "List LAGs",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationLagPageDto"
+     }
+    },
+    "get_lag": {
+     "opId": "getLag",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/switching/lags/{lagId}",
+     "class": "read",
+     "summary": "Get LAG Details",
+     "pathParams": [
+      {
+       "name": "lagId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/LAG details"
+     }
+    },
+    "list_mc_lag_domains": {
+     "opId": "getMcLagDomainPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/switching/mc-lag-domains",
+     "class": "read",
+     "summary": "List MC-LAG Domains",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationMcLagDomainDtoPageDto"
+     }
+    },
+    "get_mc_lag_domain": {
+     "opId": "getMcLagDomain",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/switching/mc-lag-domains/{mcLagDomainId}",
+     "class": "read",
+     "summary": "Get MC-LAG Domain",
+     "pathParams": [
+      {
+       "name": "mcLagDomainId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationMcLagDomainDto"
+     }
+    },
+    "list_switch_stacks": {
+     "opId": "getSwitchStackPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/switching/switch-stacks",
+     "class": "read",
+     "summary": "List Switch Stacks",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationSwitchStackDtoPageDto"
+     }
+    },
+    "get_switch_stack": {
+     "opId": "getSwitchStack",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/switching/switch-stacks/{switchStackId}",
+     "class": "read",
+     "summary": "Get Switch Stack",
+     "pathParams": [
+      {
+       "name": "switchStackId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationSwitchStackDto"
+     }
+    }
+   }
+  },
+  "unifi_traffic_matching_lists": {
+   "title": "Traffic matching lists",
+   "ops": {
+    "list": {
+     "opId": "getTrafficMatchingLists",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/traffic-matching-lists",
+     "class": "read",
+     "summary": "List Traffic Matching Lists",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Traffic matching lists page"
+     }
+    },
+    "create": {
+     "opId": "createTrafficMatchingList",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/traffic-matching-lists",
+     "class": "create",
+     "summary": "Create Traffic Matching List",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationIpV4TrafficMatchingListCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "IPV4_ADDRESSES"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationIpV6TrafficMatchingListCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "IPV6_ADDRESSES"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationPortTrafficMatchingListCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "PORTS"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "type"
+     },
+     "responseSchema": null
+    },
+    "delete": {
+     "opId": "deleteTrafficMatchingList",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/traffic-matching-lists/{trafficMatchingListId}",
+     "class": "destructive",
+     "summary": "Delete Traffic Matching List",
+     "pathParams": [
+      {
+       "name": "trafficMatchingListId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": null
+    },
+    "get": {
+     "opId": "getTrafficMatchingList",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/traffic-matching-lists/{trafficMatchingListId}",
+     "class": "read",
+     "summary": "Get Traffic Matching List",
+     "pathParams": [
+      {
+       "name": "trafficMatchingListId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Traffic matching list"
+     }
+    },
+    "update": {
+     "opId": "updateTrafficMatchingList",
+     "method": "PUT",
+     "path": "/v1/sites/{siteId}/traffic-matching-lists/{trafficMatchingListId}",
+     "class": "update",
+     "summary": "Update Traffic Matching List",
+     "pathParams": [
+      {
+       "name": "trafficMatchingListId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationIpV4TrafficMatchingListCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "IPV4_ADDRESSES"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationIpV6TrafficMatchingListCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "IPV6_ADDRESSES"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationPortTrafficMatchingListCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "PORTS"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "type"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Traffic matching list"
+     }
+    }
+   }
+  },
+  "unifi_wifi_broadcasts": {
+   "title": "WiFi broadcasts (SSIDs) configuration",
+   "ops": {
+    "list": {
+     "opId": "getWifiBroadcastPage",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/wifi/broadcasts",
+     "class": "read",
+     "summary": "List Wifi Broadcasts",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "offset",
+       "required": false,
+       "schema": {
+        "default": 0,
+        "format": "int32",
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "limit",
+       "required": false,
+       "schema": {
+        "default": 25,
+        "format": "int32",
+        "maximum": 200,
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      {
+       "name": "filter",
+       "required": false,
+       "schema": {
+        "type": "string"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/IntegrationWifiBroadcastPageDto"
+     }
+    },
+    "create": {
+     "opId": "createWifiBroadcast",
+     "method": "POST",
+     "path": "/v1/sites/{siteId}/wifi/broadcasts",
+     "class": "create",
+     "summary": "Create Wifi Broadcast",
+     "pathParams": [
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationIotOptimizedWifiBroadcastCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "IOT_OPTIMIZED"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationStandardWifiBroadcastCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "STANDARD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "type"
+     },
+     "responseSchema": null
+    },
+    "delete": {
+     "opId": "deleteWifiBroadcast",
+     "method": "DELETE",
+     "path": "/v1/sites/{siteId}/wifi/broadcasts/{wifiBroadcastId}",
+     "class": "destructive",
+     "summary": "Delete Wifi Broadcast",
+     "pathParams": [
+      {
+       "name": "wifiBroadcastId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [
+      {
+       "name": "force",
+       "required": false,
+       "schema": {
+        "default": false,
+        "type": "boolean"
+       }
+      }
+     ],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": null
+    },
+    "get": {
+     "opId": "getWifiBroadcastDetails",
+     "method": "GET",
+     "path": "/v1/sites/{siteId}/wifi/broadcasts/{wifiBroadcastId}",
+     "class": "read",
+     "summary": "Get Wifi Broadcast Details",
+     "pathParams": [
+      {
+       "name": "wifiBroadcastId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": false,
+     "bodySchema": null,
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Wifi broadcast details"
+     }
+    },
+    "update": {
+     "opId": "updateWifiBroadcast",
+     "method": "PUT",
+     "path": "/v1/sites/{siteId}/wifi/broadcasts/{wifiBroadcastId}",
+     "class": "update",
+     "summary": "Update Wifi Broadcast",
+     "pathParams": [
+      {
+       "name": "wifiBroadcastId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      },
+      {
+       "name": "siteId",
+       "schema": {
+        "format": "uuid",
+        "type": "string"
+       }
+      }
+     ],
+     "queryParams": [],
+     "bodyRequired": true,
+     "bodySchema": {
+      "anyOf": [
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationIotOptimizedWifiBroadcastCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "IOT_OPTIMIZED"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       },
+       {
+        "allOf": [
+         {
+          "$ref": "unifi-spec#/components/schemas/IntegrationStandardWifiBroadcastCreateUpdateDto"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "const": "STANDARD"
+           }
+          },
+          "required": [
+           "type"
+          ]
+         }
+        ]
+       }
+      ],
+      "x-discriminator": "type"
+     },
+     "responseSchema": {
+      "$ref": "unifi-spec#/components/schemas/Wifi broadcast details"
+     }
+    }
+   }
+  }
+ }
+}
