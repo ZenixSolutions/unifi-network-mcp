@@ -1,5 +1,5 @@
 import { Agent, fetch as undiciFetch, type Dispatcher, type Response } from 'undici';
-import type { UnifiConfig } from './config.js';
+import { CLOUD_BASE, type UnifiConfig } from './config.js';
 import { makeRedactor } from './redact.js';
 import { UnifiApiError, UnifiUsageError } from '../domain/types.js';
 
@@ -10,6 +10,16 @@ export interface RequestSpec {
   readonly pathParams: Readonly<Record<string, string | number>>;
   readonly queryParams: Readonly<Record<string, string | number | undefined>>;
   readonly body?: unknown;
+  /** Cloud mode (ADR-002): the console to route this call to. */
+  readonly consoleId?: string;
+}
+
+/** One console visible to the API key, via Site Manager GET /v1/hosts (ADR-002). */
+export interface ConsoleSummary {
+  readonly id: string;
+  readonly name: string;
+  readonly type?: string;
+  readonly ipAddress?: string;
 }
 
 interface ErrorBody {
@@ -52,6 +62,7 @@ export function buildPath(
 export class UnifiClient {
   private readonly dispatcher: Dispatcher | undefined;
   private readonly redact: (text: string) => string;
+  private hostsCache: ConsoleSummary[] | undefined;
 
   constructor(
     private readonly config: UnifiConfig,
@@ -63,26 +74,88 @@ export class UnifiClient {
       : undefined;
   }
 
+  get mode(): 'direct' | 'cloud' {
+    return this.config.mode;
+  }
+
+  /** Integration base for one call: the configured console, or the connector proxy. */
+  private baseFor(consoleId?: string): string {
+    if (this.config.mode === 'direct') {
+      if (!this.config.consoleUrl) {
+        throw new UnifiUsageError('Direct mode requires UNIFI_CONSOLE_URL');
+      }
+      return this.config.consoleUrl.toString().replace(/\/+$/, '');
+    }
+    if (!consoleId) {
+      throw new UnifiUsageError(
+        'Cloud mode: consoleId is required. Call unifi_consoles { operation: "list" } and pass the chosen consoleId.',
+      );
+    }
+    return `${CLOUD_BASE}/v1/connector/consoles/${encodeURIComponent(consoleId)}/proxy/network/integration`;
+  }
+
+  /**
+   * Lists the consoles visible to this API key via the Site Manager API
+   * (GET https://api.ui.com/v1/hosts). Discovery only — the Network API
+   * remains the sole operational surface (ADR-002). Cached per process.
+   */
+  async listConsoles(forceRefresh = false): Promise<ConsoleSummary[]> {
+    if (this.hostsCache && !forceRefresh) return this.hostsCache;
+    const raw = await this.fetchJson(new URL(`${CLOUD_BASE}/v1/hosts`), { method: 'GET' });
+    const data =
+      typeof raw === 'object' && raw !== null && Array.isArray((raw as { data?: unknown }).data)
+        ? ((raw as { data: unknown[] }).data as Record<string, unknown>[])
+        : [];
+    this.hostsCache = data
+      .filter((h) => typeof h['id'] === 'string')
+      .map((h) => {
+        const reported =
+          typeof h['reportedState'] === 'object' && h['reportedState'] !== null
+            ? (h['reportedState'] as Record<string, unknown>)
+            : {};
+        const name =
+          firstString(reported['name'], reported['hostname'], h['hardwareId'], h['id']) ??
+          'unknown';
+        return {
+          id: h['id'] as string,
+          name,
+          ...(typeof h['type'] === 'string' ? { type: h['type'] } : {}),
+          ...(typeof h['ipAddress'] === 'string' ? { ipAddress: h['ipAddress'] } : {}),
+        };
+      });
+    return this.hostsCache;
+  }
+
   /** Performs one API request; retries idempotent GETs on 429/5xx/network errors. */
   async request(spec: RequestSpec): Promise<unknown> {
     const path = buildPath(spec.pathTemplate, spec.pathParams);
-    const url = new URL(this.config.consoleUrl.toString().replace(/\/+$/, '') + path);
+    const url = new URL(this.baseFor(spec.consoleId) + path);
     for (const [k, v] of Object.entries(spec.queryParams)) {
       if (v !== undefined) url.searchParams.set(k, String(v));
     }
-    const attempts = spec.method === 'GET' ? MAX_RETRIES + 1 : 1;
+    return this.fetchJson(url, {
+      method: spec.method,
+      ...(spec.body === undefined ? {} : { body: spec.body }),
+    });
+  }
+
+  private async fetchJson(
+    url: URL,
+    init: { method: RequestSpec['method']; body?: unknown },
+  ): Promise<unknown> {
+    const attempts = init.method === 'GET' ? MAX_RETRIES + 1 : 1;
     let lastError: unknown;
     for (let attempt = 0; attempt < attempts; attempt += 1) {
       if (attempt > 0) await sleep(250 * 2 ** (attempt - 1));
       try {
         const response = await this.fetchImpl(url, {
-          method: spec.method,
+          method: init.method,
           headers: {
             'X-API-KEY': this.config.apiKey,
             Accept: 'application/json',
-            ...(spec.body === undefined ? {} : { 'Content-Type': 'application/json' }),
+            ...(init.body === undefined ? {} : { 'Content-Type': 'application/json' }),
           },
-          ...(spec.body === undefined ? {} : { body: JSON.stringify(spec.body) }),
+          ...(init.body === undefined ? {} : { body: JSON.stringify(init.body) }),
           ...(this.dispatcher ? { dispatcher: this.dispatcher } : {}),
         });
         if (RETRYABLE_STATUS.has(response.status) && attempt < attempts - 1) {
@@ -96,16 +169,13 @@ export class UnifiClient {
         lastError = error;
         if (attempt === attempts - 1) {
           const message = error instanceof Error ? error.message : String(error);
-          throw new UnifiApiError(
-            this.redact(`Request to the UniFi console failed: ${message}`),
-            0,
-          );
+          throw new UnifiApiError(this.redact(`Request to the UniFi API failed: ${message}`), 0);
         }
       }
     }
     if (lastError instanceof UnifiApiError) throw lastError;
     const message = lastError instanceof Error ? lastError.message : String(lastError);
-    throw new UnifiApiError(this.redact(`Request to the UniFi console failed: ${message}`), 0);
+    throw new UnifiApiError(this.redact(`Request to the UniFi API failed: ${message}`), 0);
   }
 
   private async parseBody(response: Response): Promise<unknown> {
@@ -117,8 +187,8 @@ export class UnifiClient {
     } catch {
       throw new UnifiApiError(
         this.redact(
-          `Console returned a non-JSON response (status ${response.status}). ` +
-            'Check that UNIFI_CONSOLE_URL points at a UniFi Network console.',
+          `Received a non-JSON response (status ${response.status}). ` +
+            'Check that the configured URL points at a UniFi Network console or api.ui.com.',
         ),
         response.status,
       );
@@ -140,6 +210,11 @@ export class UnifiClient {
       typeof parsed.requestId === 'string' ? parsed.requestId : undefined,
     );
   }
+}
+
+function firstString(...values: unknown[]): string | undefined {
+  for (const v of values) if (typeof v === 'string' && v.length > 0) return v;
+  return undefined;
 }
 
 function sleep(ms: number): Promise<void> {

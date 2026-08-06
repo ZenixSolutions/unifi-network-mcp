@@ -13,10 +13,11 @@
 
 ## Connectivity
 
-| Mode                   | `UNIFI_CONSOLE_URL`                                                              | Notes                                                                                              |
-| ---------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Local console          | `https://<console-ip>`                                                           | Self-signed TLS: either trust the console cert or set `UNIFI_INSECURE=1` (warned; see SECURITY.md) |
-| Site Manager Connector | `https://api.ui.com/v1/connector/consoles/<consoleId>/proxy/network/integration` | Cloud proxy, no VPN; same API key header                                                           |
+| Mode                           | `UNIFI_CONSOLE_URL`                                                              | Notes                                                                                                                                    |
+| ------------------------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Cloud multi-console (ADR-002)  | _unset_                                                                          | Consoles discovered via `unifi_consoles` (Site Manager `GET /v1/hosts`); per-call `consoleId` routes through the connector proxy; no VPN |
+| Local console (direct)         | `https://<console-ip>`                                                           | Self-signed TLS: either trust the console cert or set `UNIFI_INSECURE=1` (warned; see SECURITY.md)                                       |
+| Pinned connector base (direct) | `https://api.ui.com/v1/connector/consoles/<consoleId>/proxy/network/integration` | Cloud proxy bound to one console; no VPN; same API key header                                                                            |
 
 ## MCP clients and transports
 

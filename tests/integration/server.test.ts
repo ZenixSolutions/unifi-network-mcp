@@ -31,13 +31,14 @@ function stubClient(result: unknown = { ok: true }) {
 }
 
 describe('MCP server end-to-end (in-memory transport)', () => {
-  it('lists 15 tools with annotations', async () => {
+  it('lists 16 tools with annotations', async () => {
     const mcp = await connect({ env: ENV });
     const { tools } = await mcp.listTools();
-    expect(tools).toHaveLength(15);
+    expect(tools).toHaveLength(16);
     const names = tools.map((t) => t.name);
     expect(names).toContain('unifi_devices');
     expect(names).toContain('unifi_spec');
+    expect(names).toContain('unifi_consoles');
     const switching = tools.find((t) => t.name === 'unifi_switching');
     expect(switching?.annotations?.readOnlyHint).toBe(true);
     const networks = tools.find((t) => t.name === 'unifi_networks');
@@ -126,7 +127,7 @@ describe('MCP server end-to-end (in-memory transport)', () => {
       arguments: { operation: 'list' },
     })) as TextResult;
     expect(result.isError).toBe(true);
-    expect(result.content[0]!.text).toContain('UNIFI_CONSOLE_URL');
+    expect(result.content[0]!.text).toContain('UNIFI_API_KEY');
   });
 
   it('redacts the API key if it ever appears in an upstream error', async () => {
@@ -145,7 +146,83 @@ describe('listTools purity', () => {
   it('is stable and needs no configuration', () => {
     const first = listTools();
     const second = listTools();
-    expect(first).toHaveLength(15);
+    expect(first).toHaveLength(16);
     expect(JSON.stringify(first)).toBe(JSON.stringify(second));
+  });
+});
+
+describe('cloud multi-console mode (ADR-002)', () => {
+  const CLOUD_ENV = { UNIFI_API_KEY: 'cloud-secret' };
+  const consoleA = { id: 'AAAA:1111', name: 'Acme HQ', type: 'console', ipAddress: '1.2.3.4' };
+  const consoleB = { id: 'BBBB:2222', name: 'Beta Corp', type: 'console' };
+
+  function cloudStub(consoles: unknown[], result: unknown = { ok: true }) {
+    const request = vi.fn().mockResolvedValue(result);
+    const listConsoles = vi.fn().mockResolvedValue(consoles);
+    return {
+      stub: { request, listConsoles, mode: 'cloud' } as unknown as UnifiClient,
+      request,
+      listConsoles,
+    };
+  }
+
+  it('unifi_consoles lists the consoles visible to the key', async () => {
+    const { stub, listConsoles } = cloudStub([consoleA, consoleB]);
+    const mcp = await connect({ env: CLOUD_ENV, client: stub });
+    const result = (await mcp.callTool({
+      name: 'unifi_consoles',
+      arguments: { operation: 'list' },
+    })) as TextResult;
+    expect(result.isError).toBeFalsy();
+    expect(result.content[0]!.text).toContain('Acme HQ');
+    expect(listConsoles).toHaveBeenCalledWith(false);
+  });
+
+  it('with several consoles and no consoleId, returns the list and asks for a choice', async () => {
+    const { stub, request } = cloudStub([consoleA, consoleB]);
+    const mcp = await connect({ env: CLOUD_ENV, client: stub });
+    const result = (await mcp.callTool({
+      name: 'unifi_sites',
+      arguments: { operation: 'list' },
+    })) as TextResult;
+    expect(result.isError).toBe(true);
+    expect(result.content[0]!.text).toContain('consoleId');
+    expect(result.content[0]!.text).toContain('Acme HQ');
+    expect(result.content[0]!.text).toContain('BBBB:2222');
+    expect(request).not.toHaveBeenCalled();
+  });
+
+  it('with exactly one console, uses it automatically', async () => {
+    const { stub, request } = cloudStub([consoleA]);
+    const mcp = await connect({ env: CLOUD_ENV, client: stub });
+    const result = (await mcp.callTool({
+      name: 'unifi_sites',
+      arguments: { operation: 'list' },
+    })) as TextResult;
+    expect(result.isError).toBeFalsy();
+    expect(request).toHaveBeenCalledWith(expect.objectContaining({ consoleId: 'AAAA:1111' }));
+  });
+
+  it('an explicit consoleId is passed through without discovery', async () => {
+    const { stub, request, listConsoles } = cloudStub([consoleA, consoleB]);
+    const mcp = await connect({ env: CLOUD_ENV, client: stub });
+    const result = (await mcp.callTool({
+      name: 'unifi_sites',
+      arguments: { operation: 'list', consoleId: 'BBBB:2222' },
+    })) as TextResult;
+    expect(result.isError).toBeFalsy();
+    expect(listConsoles).not.toHaveBeenCalled();
+    expect(request).toHaveBeenCalledWith(expect.objectContaining({ consoleId: 'BBBB:2222' }));
+  });
+
+  it('with no visible consoles, says so plainly', async () => {
+    const { stub } = cloudStub([]);
+    const mcp = await connect({ env: CLOUD_ENV, client: stub });
+    const result = (await mcp.callTool({
+      name: 'unifi_sites',
+      arguments: { operation: 'list' },
+    })) as TextResult;
+    expect(result.isError).toBe(true);
+    expect(result.content[0]!.text).toContain('No consoles');
   });
 });

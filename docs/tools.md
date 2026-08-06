@@ -179,3 +179,11 @@ WiFi broadcasts (SSIDs) configuration
 ## `unifi_spec`
 
 Vendor API contract lookup (Read). Input: `{ "operation": "<tool>.<operation>" }`. Returns the operation's method, path, class, parameters, request-body schema, and response schema, dereferenced from the committed OpenAPI contract.
+
+## `unifi_consoles`
+
+Console discovery for cloud mode (Read, ADR-002). `{ "operation": "list" }` returns every console visible to the API key via Site Manager `GET /v1/hosts` — pass a returned `id` as `consoleId` to any other tool. `refresh: true` bypasses the per-process cache.
+
+## Cloud mode and `consoleId`
+
+Every tool accepts an optional `consoleId` (cloud mode only; ignored in direct mode). With no `consoleId` in cloud mode: one visible console is used automatically; several visible consoles return the list to choose from.
