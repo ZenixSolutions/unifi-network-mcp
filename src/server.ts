@@ -174,4 +174,4 @@ function ok(text: string): { content: { type: 'text'; text: string }[] } {
 }
 
 /** Must match package.json; asserted by tests/version.test.ts. */
-export const PACKAGE_VERSION = '0.1.0';
+export const PACKAGE_VERSION = '0.1.1';

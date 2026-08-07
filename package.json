@@ -1,6 +1,6 @@
 {
   "name": "@zenixsolutions/unifi-network-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for the official UniFi Network Integration API. Community project, not affiliated with or endorsed by Ubiquiti Inc.",
   "type": "module",
   "license": "MIT",
