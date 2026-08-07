@@ -2,9 +2,17 @@
 
 MCP server for the **official UniFi Network Integration API**.
 
-Gives AI assistants (Claude, and any MCP-compatible client) typed, safety-gated access to your UniFi Network console: devices, clients, networks, WiFi, firewall policies and zones, ACL rules, DNS policies, traffic matching lists, hotspot vouchers, switching views, and supporting resources — the complete documented v10.4.57 surface, 73 operations behind 15 tools.
+Gives AI assistants (Claude, and any MCP-compatible client) typed, safety-gated access to your UniFi Network console: devices, clients, networks, WiFi, firewall policies and zones, ACL rules, DNS policies, traffic matching lists, hotspot vouchers, switching views, and supporting resources — the complete documented v10.4.57 surface, 73 operations behind 16 tools.
 
 > **Community project.** Not affiliated with, endorsed by, or supported by Ubiquiti Inc. "UniFi" is used only to describe what this software connects to.
+
+## Get started with AI
+
+Paste this into Claude, ChatGPT, Grok, or any AI assistant for a guided, hands-on setup:
+
+```text
+Read https://raw.githubusercontent.com/ZenixSolutions/unifi-network-mcp/main/docs/ai-setup.md and follow its instructions to help me set up the UniFi Network MCP server with my AI client.
+```
 
 ## Quick start (cloud, recommended)
 

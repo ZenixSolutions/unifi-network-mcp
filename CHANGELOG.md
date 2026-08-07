@@ -6,6 +6,12 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `docs/ai-setup.md` and a "Get started with AI" README section: a copy-paste
+  prompt that walks any AI assistant (Claude, ChatGPT, Grok, ...) through
+  guided setup, mirroring the vendor's own onboarding pattern.
+
 ## [0.1.0] - 2026-08-06
 
 ### Added
